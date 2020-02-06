@@ -6,6 +6,7 @@
     // Board (locations of mines) - array (probably?)
     // Game over - boolean
     // Winner - boolean
+    // Number of remaining flags 
     // Timer
     // Message - string
     // High scores (technically low times) - array of numbers
@@ -35,9 +36,15 @@
         // Reveal a border of numbers surrounding the blank cells
     // Make all revealed squares unclickable
 
-// Handle if player right clicks a square
-    // Place a flag in that square
-    // Make that square unclickable unless you right click it again to remove the flag
+// Handle if player right clicks 
+    // If cell is unmarked
+        // Place a flag in that square
+        // Make that square un-left-clickable
+        // Decrease remaining flags available by 1
+    // If cell is marked
+        // Remove flag from square
+        // Make that square left-clickable again
+        // Increase remaining flags available by 1
 
 // If gameOver 
     // Stop timer

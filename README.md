@@ -1,4 +1,5 @@
 # minesweeper
+![Wireframe](./wireframe-sketch.png) 
 ![Minesweeper Wireframe](./wireframe.png)
 
 ```//Define required constants

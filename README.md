@@ -81,3 +81,7 @@
     // When user presses the replay button, the div will ask the user 
     // for game difficulty. Upon selection, the board will render and 
     // fade back in to full opacity.
+    
+
+    // SHAMELESS SELF PROMOTION
+    // Don't forget to come see my band tomorrow night

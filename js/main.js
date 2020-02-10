@@ -5,8 +5,11 @@
         // Number cell
         // Flag cell
         // Hidden cell
-
+        
 //---------- CONSTANTS ----------//
+const surroundingCells = [-11, -10, -9, -1, 1, 9, 10, 11];
+const surroundingLeftSide = [-10, -9, 1, 10, 11];
+const surroundingRightSide = [-11, -10, -1, 9, 10]
 
 
 //Define required variables used to track the state of the game
@@ -103,7 +106,7 @@ document.querySelector('#board').addEventListener('click', handleClick);
 
 function init() {
     for (let i = 0; i < 100; i++) {
-        board.push(null);
+        board.push(0);
     };
     numOfMines = 10;
     numOfFlags = numOfMines;
@@ -127,16 +130,78 @@ function placeMines() {
 
 function handleClick(e) {
     let clicked = e.target;
-    let cellIndex = clicked.getAttribute('data-id');
+    let cellIndex = parseInt(clicked.getAttribute('data-id'));
     if (board[cellIndex] === -1) {
-        handleMine();
-    } else if ()
+        handleMine(clicked);
+    } else {
+        let adjacentIndex = [];
+        if (cellIndex % 10 === 9) {
+            for (let i = 0; i < surroundingRightSide.length; i++) {
+                if (cellIndex + surroundingRightSide[i] >= 0 && cellIndex + surroundingRightSide[i] < 100) {
+                    adjacentIndex.push(cellIndex + surroundingRightSide[i]);
+                };
+            };
+        } else if (cellIndex % 10 === 0) {
+            for (let i = 0; i < surroundingLeftSide.length; i++) {
+                if (cellIndex + surroundingLeftSide[i] >= 0 && cellIndex + surroundingLeftSide[i] < 100) {
+                    adjacentIndex.push(cellIndex + surroundingLeftSide[i]);
+                };
+            };
+        } else {
+            for (let i = 0; i < surroundingCells.length; i++) {
+                if (cellIndex + surroundingCells[i] >= 0 && cellIndex + surroundingCells[i] < 100) {
+                    adjacentIndex.push(cellIndex + surroundingCells[i]);
+                };
+            };
+        };
+        // console.log(adjacentIndex);
+        let numAdjacent = 0;
+        for (let i = 0; i < adjacentIndex.length; i++) {
+            numAdjacent += Math.abs(board[adjacentIndex[i]]);
+        };
+        // console.log(numAdjacent);
+        if (numAdjacent === 0) {
+            clicked.classList.add('clicked');
+        };
+        if (numAdjacent > 0) {
+            clicked.classList.add('clicked', `touch${numAdjacent}`);
+            clicked.textContent = `${numAdjacent}`;
+        }
+
+    };
 }
 
-function handleMine() {
-    document.querySelector('body').style.background = 'red';
+function handleMine(clicked) {
+    console.log('Boom bitch');
+    clicked.style.background = 'red';
 }
 
-function checkAdjacent() {
-    
-}
+// function checkAdjacent() {
+//     let numAdjacent = 0;
+//     for (let i = 0; i < surroundingCells.length; i++) {
+//         numAdjacent += Math.abs((board[cellIndex + i]));
+//     };
+//     console.log(numAdjacent);
+// }
+
+
+
+// if (cellIndex % 10 === 9) {
+//     for (let i = 0; i < surroundingRightSide.length; i++) {
+//         if (cellIndex + surroundingRightSide[i] >= 0 && cellIndex + surroundingRightide[i] < 100) {
+//             adjacentIndex.push(cellIndex + surroundingRightSide[i]);
+//         };
+//     };
+// } else if (cellIndex % 10 === 0) {
+//     for (let i = 0; i < surroundingLeftSide.length; i++) {
+//         if (cellIndex + surroundingLeftSide[i] >= 0 && cellIndex + surroundingLeftSide[i] < 100) {
+//             adjacentIndex.push(cellIndex + surroundingLeftSide[i]);
+//         };
+//     };
+// } else {
+//     for (let i = 0; i < surroundingCells.length; i++) {
+//         if (cellIndex + surroundingCells[i] >= 0 && cellIndex + surroundingCells[i] < 100) {
+//             adjacentIndex.push(cellIndex + surroundingCells[i]);
+//         };
+//     };
+// };

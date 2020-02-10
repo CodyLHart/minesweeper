@@ -1,3 +1,6 @@
+body {
+    font-family: 'Quicksand', sans-serif;
+}
 
 #board {
     display: flex;
@@ -16,4 +19,34 @@
     border-top: 5px solid #505050;
     border-right: 5px solid #202020;
     border-bottom: 5px solid #202020;
+    text-align: center;
+}
+
+.clicked {
+    border: 1px solid #202020;
+    font-size: 35px;
+}
+
+.touch1 {
+    color: #AAAAFF;
+}
+
+.touch2 {
+    color: #AAFFAA;
+}
+
+.touch3 {
+    color: #FFAAAA;
+}
+
+.touch4 {
+    color: #FFAAFF;
+}
+
+.touch5 {
+    color: #FFFFAA;
+}
+
+.touch6 {
+    color: #AAFFFF;
 }

@@ -1,0 +1,19 @@
+
+#board {
+    display: flex;
+    height: 500px;
+    width: 500px;
+    background: gray;
+    flex-wrap: wrap;
+}
+
+.cell {
+    box-sizing: border-box;
+    height: 50px;
+    width: 50px;
+    background: #353535;
+    border-left: 5px solid #505050;
+    border-top: 5px solid #505050;
+    border-right: 5px solid #202020;
+    border-bottom: 5px solid #202020;
+}

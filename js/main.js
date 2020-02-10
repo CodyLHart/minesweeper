@@ -6,6 +6,9 @@
         // Flag cell
         // Hidden cell
 
+//---------- CONSTANTS ----------//
+
+
 //Define required variables used to track the state of the game
     // Difficulty Level
         // numOfMines - number
@@ -18,11 +21,30 @@
     // message - string
     // fastTimes - array of numbers
 
+//---------- STATE ----------//
+let board = [];
+let gameOver = false;
+let isWinner = false;
+let numOfMines;
+let numOfFlags;
+let message;
+
 // Cached DOM elements
     // All of the cells on the board 
     // Replay button
     // Message
+let boardEl = document.querySelector('#board');
 
+for (let i = 0; i < 100; i++) {
+    let newCell = document.createElement('div');
+    newCell.setAttribute('class', 'cell');
+    newCell.setAttribute('data-id', `${i}`);
+    boardEl.appendChild(newCell);
+}
+
+
+//---------- EVENT LISTENERS ----------//
+document.querySelector('#board').addEventListener('click', handleClick);
 
 // Upon loading the app should:
     // Receive player input for difficulty level
@@ -78,3 +100,43 @@
     // When user presses the replay button, the div will ask the user 
     // for game difficulty. Upon selection, the board will render and 
     // fade back in to full opacity.
+
+function init() {
+    for (let i = 0; i < 100; i++) {
+        board.push(null);
+    };
+    numOfMines = 10;
+    numOfFlags = numOfMines;
+    placeMines();
+    console.log(board);
+}
+
+function placeMines() {
+    let randoms = [];
+    let random;
+    while (randoms.length < numOfMines) {
+        random = (Math.floor(Math.random() * 100))
+        if (randoms.includes(random) === false) {
+            randoms.push(random)
+        };
+    };
+    for (let i = 0; i < randoms.length; i++) {
+        board[randoms[i]] = -1;
+    };
+}
+
+function handleClick(e) {
+    let clicked = e.target;
+    let cellIndex = clicked.getAttribute('data-id');
+    if (board[cellIndex] === -1) {
+        handleMine();
+    } else if ()
+}
+
+function handleMine() {
+    document.querySelector('body').style.background = 'red';
+}
+
+function checkAdjacent() {
+    
+}

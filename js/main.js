@@ -104,6 +104,10 @@ document.querySelector('#board').addEventListener('click', handleClick);
     // for game difficulty. Upon selection, the board will render and 
     // fade back in to full opacity.
 
+
+//---------- FUNCTIONS ----------//
+init();
+
 function init() {
     for (let i = 0; i < 100; i++) {
         board.push(0);
@@ -155,19 +159,26 @@ function handleClick(e) {
             };
         };
         // console.log(adjacentIndex);
-        let numAdjacent = 0;
-        for (let i = 0; i < adjacentIndex.length; i++) {
-            numAdjacent += Math.abs(board[adjacentIndex[i]]);
+        function reveal() {
+            let numAdjacent = 0;
+            for (let i = 0; i < adjacentIndex.length; i++) {
+                numAdjacent += Math.abs(board[adjacentIndex[i]]);
+            };
+            // console.log(numAdjacent);
+            if (numAdjacent === 0) {
+                clicked.classList.add('clicked');
+                // Iterate through the surrounding cells and reveal
+                // console.log(adjacentIndex);
+                // for (let i = 0; i < adjacentIndex; i++) {
+                    
+                // };
+            };
+            if (numAdjacent > 0) {
+                clicked.classList.add('clicked', `touch${numAdjacent}`);
+                clicked.textContent = `${numAdjacent}`;
+            };
         };
-        // console.log(numAdjacent);
-        if (numAdjacent === 0) {
-            clicked.classList.add('clicked');
-        };
-        if (numAdjacent > 0) {
-            clicked.classList.add('clicked', `touch${numAdjacent}`);
-            clicked.textContent = `${numAdjacent}`;
-        }
-
+        reveal();
     };
 }
 
@@ -186,22 +197,28 @@ function handleMine(clicked) {
 
 
 
-// if (cellIndex % 10 === 9) {
-//     for (let i = 0; i < surroundingRightSide.length; i++) {
-//         if (cellIndex + surroundingRightSide[i] >= 0 && cellIndex + surroundingRightide[i] < 100) {
-//             adjacentIndex.push(cellIndex + surroundingRightSide[i]);
+
+
+
+// function countAdjacent (index) {
+//     let adjacentIndex = [];
+//     if (index % 10 === 9) {
+//         for (let i = 0; i < surroundingRightSide.length; i++) {
+//             if (index + surroundingRightSide[i] >= 0 && index + surroundingRightSide[i] < 100) {
+//                 adjacentIndex.push(index + surroundingRightSide[i]);
+//             };
+//         };
+//     } else if (index % 10 === 0) {
+//         for (let i = 0; i < surroundingLeftSide.length; i++) {
+//             if (index + surroundingLeftSide[i] >= 0 && index + surroundingLeftSide[i] < 100) {
+//                 adjacentIndex.push(index + surroundingLeftSide[i]);
+//             };
+//         };
+//     } else {
+//         for (let i = 0; i < surroundingCells.length; i++) {
+//             if (index + surroundingCells[i] >= 0 && index + surroundingCells[i] < 100) {
+//                 adjacentIndex.push(index + surroundingCells[i]);
+//             };
 //         };
 //     };
-// } else if (cellIndex % 10 === 0) {
-//     for (let i = 0; i < surroundingLeftSide.length; i++) {
-//         if (cellIndex + surroundingLeftSide[i] >= 0 && cellIndex + surroundingLeftSide[i] < 100) {
-//             adjacentIndex.push(cellIndex + surroundingLeftSide[i]);
-//         };
-//     };
-// } else {
-//     for (let i = 0; i < surroundingCells.length; i++) {
-//         if (cellIndex + surroundingCells[i] >= 0 && cellIndex + surroundingCells[i] < 100) {
-//             adjacentIndex.push(cellIndex + surroundingCells[i]);
-//         };
-//     };
-// };
+// }

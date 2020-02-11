@@ -1,18 +1,31 @@
 //---------- CONSTANTS ----------//
-const surround = [-11, -10, -9, -1, 1, 9, 10, 11];
-const surroundLSide = [-10, -9, 1, 10, 11];
-const surroundRSide = [-11, -10, -1, 9, 10];
-const surroundTSide = [-1, 1, 9, 10, 11];
-const surroundBSide = [-11, -10, -9, -1, 1];
-const surroundTL = [1, 10, 11];
-const surroundTR = [-1, 9, 10];
-const surroundBL = [-10, -9, 1];
-const surroundBR = [-11, -10, -1];
+// const surround = [-11, -10, -9, -1, 1, 9, 10, 11];
+// const surroundLSide = [-10, -9, 1, 10, 11];
+// const surroundRSide = [-11, -10, -1, 9, 10];
+// const surroundTSide = [-1, 1, 9, 10, 11];
+// const surroundBSide = [-11, -10, -9, -1, 1];
+// const surroundTL = [1, 10, 11];
+// const surroundTR = [-1, 9, 10];
+// const surroundBL = [-10, -9, 1];
+// const surroundBR = [-11, -10, -1];
 
 //---------- STATE ----------//
+let boardWidth = 20;
+let boardHeight = 20;
+let boardArea = boardWidth * boardHeight;
 let board = [];
 let numOfMines = 10;
 let numAdjacent;
+
+let surround = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
+let surroundLSide = [(0 - boardWidth), (1 - boardWidth), 1, (boardWidth), (boardWidth + 1)];
+let surroundRSide = [(-1 - boardWidth), (0 - boardWidth), -1, (boardWidth - 1), (boardWidth)];
+let surroundTSide = [-1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
+let surroundBSide = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1];
+let surroundTL = [1, (boardWidth), (boardWidth + 1)];
+let surroundTR = [-1, (boardWidth - 1), (boardWidth)];
+let surroundBL = [(0 - boardWidth), (1 - boardWidth), 1];
+let surroundBR = [(-1 - boardWidth), (0 - boardWidth), -1];
 
 //---------- DOM ELEMENTS ----------//
 let boardEl = document.querySelector('#board');
@@ -27,14 +40,16 @@ function init() {
     createBoard();
     placeMines();
     placeNumbers();
-    // console.log(board);
+    console.log(board);
 }
 
 function createBoard() {
-    for (let i = 0; i < 100; i++) {
+    boardEl.style.height = `${50 * boardHeight}px`;
+    boardEl.style.width = `${50 * boardWidth}px`;
+    for (let i = 0; i < boardArea; i++) {
         board.push(0);
     };
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < boardArea; i++) {
         let newCell = document.createElement('div');
         newCell.setAttribute('class', 'cell');
         newCell.setAttribute('id', `${i}`);
@@ -46,7 +61,7 @@ function placeMines() {
     let randoms = [];
     let random;
     while (randoms.length < numOfMines) {
-        random = (Math.floor(Math.random() * 100))
+        random = (Math.floor(Math.random() * boardArea))
         if (randoms.includes(random) === false) {
             randoms.push(random)
         };
@@ -59,9 +74,9 @@ function placeMines() {
 function placeNumbers() {
     for (let i = 0; i < board.length; i++) {
         if (board[i] !== 'M') {
-            if (i % 10 === 0) {
+            if (i % boardWidth === 0) {
                 checkSurroundingLSide(i);
-            } else if (i % 10 === 9) {
+            } else if (i % boardWidth === (boardWidth - 1)) {
                 checkSurroundingRSide(i);
             } else {
                 checkSurrounding(i);
@@ -119,7 +134,7 @@ function handleClick(e) {
             revealCell(cellIndex);
         };
     };
-    if (document.querySelectorAll('.clicked').length === 100 - numOfMines) {
+    if (document.querySelectorAll('.clicked').length === boardArea - numOfMines) {
         messageEl.textContent = 'WINNER!';
     };
 }
@@ -163,31 +178,31 @@ function flood(cellIdx) {
         for (let i = 0; i < surroundTL.length; i++) {
             revealCell(cellIdx + surroundTL[i]);
         };
-    } else if (cellIdx === 9) {
+    } else if (cellIdx === boardWidth - 1) {
         for (let i = 0; i < surroundTR.length; i++) {
             revealCell(cellIdx + surroundTR[i]);
         };
-    } else if (cellIdx === 90) {
+    } else if (cellIdx === boardArea - boardWidth) {
         for (let i = 0; i < surroundBL.length; i++) {
             revealCell(cellIdx + surroundBL[i]);
         };
-    } else if (cellIdx === 99) {
+    } else if (cellIdx === boardArea - 1) {
         for (let i = 0; i < surroundBR.length; i++) {
             revealCell(cellIdx + surroundBR[i]);
         };
-    } else if (cellIdx < 10 && cellIdx >= 0) {
+    } else if (cellIdx < boardWidth && cellIdx >= 0) {
         for (let i = 0; i < surroundTSide.length; i++) {
             revealCell(cellIdx + surroundTSide[i]);
         };
-    } else if (cellIdx > 89 && cellIdx < 100) {
+    } else if (cellIdx >= boardArea - boardWidth && cellIdx < boardArea) {
         for (let i = 0; i < surroundBSide.length; i++) {
             revealCell(cellIdx + surroundBSide[i]);
         };
-    } else if (cellIdx % 10 === 0) {
+    } else if (cellIdx % boardWidth === 0) {
         for (let i = 0; i < surroundLSide.length; i++) {
             revealCell(cellIdx + surroundLSide[i]);
         };
-    } else if (cellIdx % 10 === 9) {
+    } else if (cellIdx % boardWidth === boardWidth - 1) {
         for (let i = 0; i < surroundRSide.length; i++) {
             revealCell(cellIdx + surroundRSide[i]);
         };

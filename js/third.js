@@ -16,23 +16,10 @@ let numAdjacent;
 
 //---------- DOM ELEMENTS ----------//
 let boardEl = document.querySelector('#board');
-
-for (let i = 0; i < 100; i++) {
-    let newCell = document.createElement('div');
-    newCell.setAttribute('class', 'cell');
-    newCell.setAttribute('id', `${i}`);
-    boardEl.appendChild(newCell);
-};
+let messageEl = document.querySelector('h1');
 
 //---------- EVENT LISTENERS ----------//
-document.querySelector('#board').addEventListener('click', handleClick);
-// document.querySelector('#board').addEventListener('click', function (e){
-//     if (e.altKey) {
-//         console.log('TEST');
-//     };
-// });
-
-
+boardEl.addEventListener('click', handleClick);
 //---------- FUNCTIONS ----------//
 init();
 
@@ -40,12 +27,18 @@ function init() {
     createBoard();
     placeMines();
     placeNumbers();
-    console.log(board);
+    // console.log(board);
 }
 
 function createBoard() {
     for (let i = 0; i < 100; i++) {
         board.push(0);
+    };
+    for (let i = 0; i < 100; i++) {
+        let newCell = document.createElement('div');
+        newCell.setAttribute('class', 'cell');
+        newCell.setAttribute('id', `${i}`);
+        boardEl.appendChild(newCell);
     };
 }
 
@@ -109,23 +102,52 @@ function checkSurroundingRSide(index) {
 
 
 function handleClick(e) {
-    let clicked = e.target;
-    let cellIndex = parseInt(clicked.getAttribute('id'));
-    if (board[cellIndex] === 'M') {
-        handleMine(clicked);
+    if (e.altKey) {
+        let clicked = e.target;
+        if (!clicked.classList.contains('flagged')) {
+            clicked.classList.add('flagged');
+        } else if (clicked.classList.contains('flagged')) {
+            clicked.classList.remove('flagged');
+        };
     } else {
-        revealCell(cellIndex);
-    }
+        let clicked = e.target;
+        if (clicked.classList.contains('flagged')) return;
+        let cellIndex = parseInt(clicked.getAttribute('id'));
+        if (board[cellIndex] === 'M') {
+            handleMine(clicked);
+        } else {
+            revealCell(cellIndex);
+        };
+    };
+    if (document.querySelectorAll('.clicked').length === 100 - numOfMines) {
+        messageEl.textContent = 'WINNER!';
+    };
 }
 
 function handleMine(clicked) {
     console.log('Boom bitch');
     clicked.style.background = 'red';
+    revealMines();
+    messageEl.textContent = 'LOSER!';
+    boardEl.removeEventListener('click', handleClick);
+}
+
+function revealMines() {
+    let mineIdx = []
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] === 'M') {
+            mineIdx.push(i);
+        };
+    };
+    for (let i = 0; i < mineIdx.length; i++) {
+        document.getElementById(mineIdx[i].toString()).style.background = 'red';
+    }
+    console.log(mineIdx);
 }
 
 
 function revealCell(cellIdx) {
-    console.log(cellIdx);
+    // console.log(cellIdx);
     if (document.getElementById(`${cellIdx}`).classList.contains('clicked')) return;
     if (board[cellIdx] === 0) {
         document.getElementById(`${cellIdx}`).classList.add('clicked');
@@ -176,15 +198,3 @@ function flood(cellIdx) {
     };
 }
 
-
-
-//THIS IS HOW I KNOW THIS WAS A TeST!!! \\\
-
-
-
-//TESTING TESTING 123 IF YOU FUCK UP GO BACK TO HERE!!!!!!!
-
-
-
-
-/////YREEEEEEEW

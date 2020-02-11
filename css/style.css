@@ -50,3 +50,7 @@ body {
 .touch6 {
     color: #AAFFFF;
 }
+
+.flagged {
+    background: lime;
+}

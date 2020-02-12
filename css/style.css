@@ -2,29 +2,51 @@ body {
     font-family: 'Quicksand', sans-serif;
 }
 
+#container {
+    background: #353535;
+    /* text-align: center; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+#board-header {
+    background: #353535;
+    border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
+    border-top: 3px solid #202020;
+    border-left: 3px solid #202020;
+    height: 45px;
+    margin-bottom: 10px;
+}
+
 #board {
     display: flex;
-    /* height: 500px;
-    width: 500px; */
     background: gray;
     flex-wrap: wrap;
+    border-top: 3px solid #202020;
+    border-left: 3px solid #202020;
+    border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
 }
 
 .cell {
     box-sizing: border-box;
-    height: 50px;
-    width: 50px;
+    height: 25px;
+    width: 25px;
     background: #353535;
-    border-left: 5px solid #505050;
-    border-top: 5px solid #505050;
-    border-right: 5px solid #202020;
-    border-bottom: 5px solid #202020;
+    border-left: 3px solid #505050;
+    border-top: 3px solid #505050;
+    border-right: 3px solid #202020;
+    border-bottom: 3px solid #202020;
     text-align: center;
 }
 
 .clicked {
     border: 1px solid #202020;
-    font-size: 35px;
+    font-size: 18px;
 }
 
 .touch1 {

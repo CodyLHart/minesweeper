@@ -16,6 +16,9 @@ let boardArea = boardWidth * boardHeight;
 let board = [];
 let numOfMines = 10;
 let numAdjacent;
+let timerCount = 0;
+let timerVar;
+
 
 let surround = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
 let surroundLSide = [(0 - boardWidth), (1 - boardWidth), 1, (boardWidth), (boardWidth + 1)];
@@ -30,6 +33,10 @@ let surroundBR = [(-1 - boardWidth), (0 - boardWidth), -1];
 //---------- DOM ELEMENTS ----------//
 let boardEl = document.querySelector('#board');
 let messageEl = document.querySelector('h1');
+let flagCountEl = document.querySelector('#flag-count');
+let timerEl = document.querySelector('#timer');
+let containerEl = document.querySelector('#container');
+let boardHeaderEl = document.querySelector('#board-header');
 
 //---------- EVENT LISTENERS ----------//
 boardEl.addEventListener('click', handleClick);
@@ -40,12 +47,14 @@ function init() {
     createBoard();
     placeMines();
     placeNumbers();
+    numOfFlags = numOfMines;
+    flagCountEl.textContent = `FLAGS: ${numOfFlags}`;
     console.log(board);
 }
 
 function createBoard() {
-    boardEl.style.height = `${50 * boardHeight}px`;
-    boardEl.style.width = `${50 * boardWidth}px`;
+    boardEl.style.height = `${25 * boardHeight}px`;
+    boardEl.style.width = `${25 * boardWidth}px`;
     for (let i = 0; i < boardArea; i++) {
         board.push(0);
     };
@@ -55,6 +64,9 @@ function createBoard() {
         newCell.setAttribute('id', `${i}`);
         boardEl.appendChild(newCell);
     };
+    containerEl.style.height = `${(25 * boardHeight) + 55}px`;
+    containerEl.style.width = `${(25 * boardWidth)}px`;
+    boardHeaderEl.style.width = `${25 * boardWidth}px`;
 }
 
 function placeMines() {
@@ -119,10 +131,13 @@ function checkSurroundingRSide(index) {
 function handleClick(e) {
     if (e.altKey) {
         let clicked = e.target;
+        if (clicked.classList.contains('clicked')) return;
         if (!clicked.classList.contains('flagged')) {
             clicked.classList.add('flagged');
+            numOfFlags--;
         } else if (clicked.classList.contains('flagged')) {
             clicked.classList.remove('flagged');
+            numOfFlags++;
         };
     } else {
         let clicked = e.target;
@@ -131,12 +146,18 @@ function handleClick(e) {
         if (board[cellIndex] === 'M') {
             handleMine(clicked);
         } else {
+            if (document.querySelectorAll('.clicked').length === 0) {
+                timerVar = setInterval(startTimer, 1000);
+            }
             revealCell(cellIndex);
         };
     };
     if (document.querySelectorAll('.clicked').length === boardArea - numOfMines) {
         messageEl.textContent = 'WINNER!';
+        stopTimer();
+        boardEl.removeEventListener('click', handleClick);
     };
+    flagCountEl.textContent = `FLAGS: ${numOfFlags}`;
 }
 
 function handleMine(clicked) {
@@ -144,6 +165,7 @@ function handleMine(clicked) {
     clicked.style.background = 'red';
     revealMines();
     messageEl.textContent = 'LOSER!';
+    stopTimer();
     boardEl.removeEventListener('click', handleClick);
 }
 
@@ -213,3 +235,11 @@ function flood(cellIdx) {
     };
 }
 
+function startTimer() {
+        timerCount++;
+        timerEl.textContent = timerCount;
+}
+
+function stopTimer() {
+    clearInterval(timerVar);
+}

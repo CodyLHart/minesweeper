@@ -1,11 +1,3 @@
-//Define required constants
-    // Types of cells
-        // Mine cell
-        // Empty cell
-        // Number cell
-        // Flag cell
-        // Hidden cell
-        
 //---------- CONSTANTS ----------//
 const surroundingCells = [-11, -10, -9, -1, 1, 9, 10, 11];
 const surroundingLeftSide = [-10, -9, 1, 10, 11];

@@ -10,11 +10,14 @@
 // const surroundBR = [-11, -10, -1];
 
 //---------- STATE ----------//
-let boardWidth = 20;
-let boardHeight = 20;
+let boardWidth = 10;
+let boardHeight = 10;
+let numMines = 10;
+// let boardWidth = prompt('Width');
+// let boardHeight = prompt('Height');
+// let numMines = prompt('Mines');
 let boardArea = boardWidth * boardHeight;
 let board = [];
-let numOfMines = 10;
 let numAdjacent;
 let timerCount = 0;
 let timerVar;
@@ -47,8 +50,8 @@ function init() {
     createBoard();
     placeMines();
     placeNumbers();
-    numOfFlags = numOfMines;
-    flagCountEl.textContent = `FLAGS: ${numOfFlags}`;
+    numFlags = numMines;
+    flagCountEl.textContent = `FLAGS: ${numFlags}`;
     console.log(board);
 }
 
@@ -72,7 +75,7 @@ function createBoard() {
 function placeMines() {
     let randoms = [];
     let random;
-    while (randoms.length < numOfMines) {
+    while (randoms.length < numMines) {
         random = (Math.floor(Math.random() * boardArea))
         if (randoms.includes(random) === false) {
             randoms.push(random)
@@ -134,10 +137,26 @@ function handleClick(e) {
         if (clicked.classList.contains('clicked')) return;
         if (!clicked.classList.contains('flagged')) {
             clicked.classList.add('flagged');
-            numOfFlags--;
+            numFlags--;
+            if (numFlags === 0) {
+                let flagCheck = []
+                let flaggedArray = document.querySelectorAll('.flagged');
+                for (let i = 0; i < flaggedArray.length; i++) {
+                    flagCheck.push(parseInt(flaggedArray[i].getAttribute('id')));
+                };
+                for (let i = 0; i < flagCheck.length; i++) {
+                    if (board[flagCheck[i]] !== 'M') {
+                        return;
+                    } else {
+                        messageEl.textContent = 'WINNER!';
+                        stopTimer();
+                        boardEl.removeEventListener('click', handleClick);   
+                    }
+                }
+            };
         } else if (clicked.classList.contains('flagged')) {
             clicked.classList.remove('flagged');
-            numOfFlags++;
+            numFlags++;
         };
     } else {
         let clicked = e.target;
@@ -152,12 +171,12 @@ function handleClick(e) {
             revealCell(cellIndex);
         };
     };
-    if (document.querySelectorAll('.clicked').length === boardArea - numOfMines) {
+    if (document.querySelectorAll('.clicked').length === boardArea - numMines) {
         messageEl.textContent = 'WINNER!';
         stopTimer();
         boardEl.removeEventListener('click', handleClick);
     };
-    flagCountEl.textContent = `FLAGS: ${numOfFlags}`;
+    flagCountEl.textContent = `FLAGS: ${numFlags}`;
 }
 
 function handleMine(clicked) {
@@ -243,3 +262,19 @@ function startTimer() {
 function stopTimer() {
     clearInterval(timerVar);
 }
+
+
+// if (numFlags === 0) {
+//     let flagCheck = []
+//     let flaggedArray = document.querySelectorAll('.flagged');
+//     for (let i = 0; i < flaggedArray.length; i++) {
+//         flagCheck.push(flaggedArray[i].getAttribute('id'));
+//     };
+//     console.log(flagCheck);
+// };
+
+// If 0 flags are remaining
+// Find indexes of flagged cells and put them into flagged array
+// Iterate through flagged array
+    // If  all flagged indexes are equal to mine indexes
+    // Winner

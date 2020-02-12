@@ -77,7 +77,8 @@ body {
 }
 
 .flagged {
-    background: lime;
+    background: url('../Images/Flag-Cell.png'); 
+    background-size: 100%;
 }
 
 #timer {

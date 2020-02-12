@@ -7,7 +7,7 @@ body {
 }
 
 h1 {
-    color: #B09090;
+    color: #E0D0D0;
 }
 
 #container {
@@ -133,4 +133,32 @@ h1 {
 img {
     height: 100%;
     width: 100%;
+}
+
+button {
+    margin-top: 10px;
+    background-color: #353535;
+    border-left: 3px solid #505050;
+    border-top: 3px solid #505050;
+    border-right: 3px solid #202020;
+    border-bottom: 3px solid #202020;
+    color: #E0D0D0;
+    font-size: 15px;
+    font-family: 'Quicksand', sans-serif;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #E0D0D0;
+}
+
+input {
+    width: 50px;
+}
+
+#submit {
+    width: 100px;
+    margin-top: 5px;
 }

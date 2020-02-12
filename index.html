@@ -11,10 +11,25 @@
     <title>Minesweeper</title>
 </head>
 <body>
+    <form>
+        <div>
+            <label for="width">CHOOSE BOARD WIDTH:</label>
+            <input type="text" name="width">
+        </div>
+        <div>
+            <label for="height">CHOOSE BOARD HEIGHT:</label>
+            <input type="text" name="height">
+        </div>
+        <div>
+            <label for="mines">CHOOSE NUMBER OF MINES:</label>
+            <input type="text" name="mines">
+        </div>
+        <button id="submit">LET'S GO!</button>
+    </form>
     <h1 id="message"></h1>
     <div id="container">
         <div id="board-header">
-            <div id="flag-section">
+            <div class="bh-div" id="flag-section">
                 <img src="Images/Flag-Cell.png">
                 <h4 id="flag-count"></h4>
             </div>
@@ -23,5 +38,6 @@
         <div id="board">
         </div>
     </div>
+    <button>RESTART</button>
 </body>
 </html>

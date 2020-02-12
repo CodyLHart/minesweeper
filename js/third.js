@@ -1,18 +1,7 @@
-//---------- CONSTANTS ----------//
-// const surround = [-11, -10, -9, -1, 1, 9, 10, 11];
-// const surroundLSide = [-10, -9, 1, 10, 11];
-// const surroundRSide = [-11, -10, -1, 9, 10];
-// const surroundTSide = [-1, 1, 9, 10, 11];
-// const surroundBSide = [-11, -10, -9, -1, 1];
-// const surroundTL = [1, 10, 11];
-// const surroundTR = [-1, 9, 10];
-// const surroundBL = [-10, -9, 1];
-// const surroundBR = [-11, -10, -1];
-
 //---------- STATE ----------//
 let boardWidth = 10;
 let boardHeight = 10;
-let numMines = 5;
+let numMines = 10;
 // let boardWidth = parseInt(prompt('Width'));
 // let boardHeight = parseInt(prompt('Height'));
 // let numMines = parseInt(prompt('Mines'));
@@ -21,7 +10,6 @@ let board = [];
 let numAdjacent;
 let timerCount = 0;
 let timerVar;
-
 
 let surround = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
 let surroundLSide = [(0 - boardWidth), (1 - boardWidth), 1, (boardWidth), (boardWidth + 1)];
@@ -40,11 +28,23 @@ let flagCountEl = document.querySelector('#flag-count');
 let timerEl = document.querySelector('#timer');
 let containerEl = document.querySelector('#container');
 let boardHeaderEl = document.querySelector('#board-header');
+let buttonEl = document.querySelector('button');
 
 //---------- EVENT LISTENERS ----------//
 boardEl.addEventListener('click', handleClick);
+buttonEl.addEventListener('click', restart);
 //---------- FUNCTIONS ----------//
 init();
+
+function restart() {
+    stopTimer();
+    boardEl.innerHTML = '';
+    board = [];
+    timerCount = 0;
+    timerEl.textContent = 0;
+    init();
+    boardEl.addEventListener('click', handleClick);
+}
 
 function init() {
     createBoard();
@@ -53,7 +53,7 @@ function init() {
     numFlags = numMines;
     flagCountEl.textContent = `${numFlags}`;
     console.log(board);
-    messageEl.textContent = 'GOOD LUCK!'
+    messageEl.textContent = 'MINESWEEPER';
 }
 
 function createBoard() {
@@ -149,11 +149,9 @@ function handleClick(e) {
                     if (board[flagCheck[i]] !== 'M') {
                         return;
                     } else {
-                        messageEl.textContent = 'WINNER!';
-                        stopTimer();
-                        boardEl.removeEventListener('click', handleClick);   
-                    }
-                }
+                        winner();
+                    };
+                };
             };
         } else if (clicked.classList.contains('flagged')) {
             clicked.classList.remove('flagged');
@@ -168,22 +166,19 @@ function handleClick(e) {
         } else {
             if (document.querySelectorAll('.clicked').length === 0) {
                 timerVar = setInterval(startTimer, 1000);
-            }
+            };
             revealCell(cellIndex);
         };
     };
     if (document.querySelectorAll('.clicked').length === boardArea - numMines) {
-        messageEl.textContent = 'WINNER!';
-        stopTimer();
-        boardEl.removeEventListener('click', handleClick);
+        winner();
     };
     flagCountEl.textContent = `${numFlags}`;
 }
 
 function handleMine(clicked) {
     console.log('Boom bitch');
-    // clicked.style.backgroundImage = 'red';
-    clicked.classList.add('mine')
+    clicked.classList.add('mine');
     revealMines();
     messageEl.textContent = 'LOSER!';
     stopTimer();
@@ -191,23 +186,19 @@ function handleMine(clicked) {
 }
 
 function revealMines() {
-    let mineIdx = []
+    let mineIdx = [];
     for (let i = 0; i < board.length; i++) {
         if (board[i] === 'M') {
             mineIdx.push(i);
         };
     };
     for (let i = 0; i < mineIdx.length; i++) {
-        // document.getElementById(mineIdx[i].toString()).style.background = 'red';
         document.getElementById(mineIdx[i].toString()).classList.add('mine');
         
-    }
-    console.log(mineIdx);
+    };
 }
 
-
 function revealCell(cellIdx) {
-    // console.log(cellIdx);
     if (document.getElementById(`${cellIdx}`).classList.contains('clicked')) return;
     if (board[cellIdx] === 0) {
         document.getElementById(`${cellIdx}`).classList.add('clicked');
@@ -267,3 +258,8 @@ function stopTimer() {
     clearInterval(timerVar);
 }
 
+function winner() {
+    messageEl.textContent = 'WINNER!';
+    stopTimer();
+    boardEl.removeEventListener('click', handleClick);
+}

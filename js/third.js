@@ -13,9 +13,9 @@
 let boardWidth = 10;
 let boardHeight = 10;
 let numMines = 5;
-// let boardWidth = prompt('Width');
-// let boardHeight = prompt('Height');
-// let numMines = prompt('Mines');
+// let boardWidth = parseInt(prompt('Width'));
+// let boardHeight = parseInt(prompt('Height'));
+// let numMines = parseInt(prompt('Mines'));
 let boardArea = boardWidth * boardHeight;
 let board = [];
 let numAdjacent;
@@ -51,8 +51,9 @@ function init() {
     placeMines();
     placeNumbers();
     numFlags = numMines;
-    flagCountEl.textContent = `FLAGS: ${numFlags}`;
+    flagCountEl.textContent = `${numFlags}`;
     console.log(board);
+    messageEl.textContent = 'GOOD LUCK!'
 }
 
 function createBoard() {
@@ -176,12 +177,13 @@ function handleClick(e) {
         stopTimer();
         boardEl.removeEventListener('click', handleClick);
     };
-    flagCountEl.textContent = `FLAGS: ${numFlags}`;
+    flagCountEl.textContent = `${numFlags}`;
 }
 
 function handleMine(clicked) {
     console.log('Boom bitch');
-    clicked.style.background = 'red';
+    // clicked.style.backgroundImage = 'red';
+    clicked.classList.add('mine')
     revealMines();
     messageEl.textContent = 'LOSER!';
     stopTimer();
@@ -196,7 +198,9 @@ function revealMines() {
         };
     };
     for (let i = 0; i < mineIdx.length; i++) {
-        document.getElementById(mineIdx[i].toString()).style.background = 'red';
+        // document.getElementById(mineIdx[i].toString()).style.background = 'red';
+        document.getElementById(mineIdx[i].toString()).classList.add('mine');
+        
     }
     console.log(mineIdx);
 }

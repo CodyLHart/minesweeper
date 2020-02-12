@@ -1,5 +1,13 @@
 body {
     font-family: 'Quicksand', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #353540;
+}
+
+h1 {
+    color: #B09090;
 }
 
 #container {
@@ -9,6 +17,10 @@ body {
     justify-content: center;
     align-items: center;
     padding: 10px;
+    border-left: 3px solid #505050;
+    border-top: 3px solid #505050;
+    border-right: 3px solid #202020;
+    border-bottom: 3px solid #202020;
 }
 
 #board-header {
@@ -76,6 +88,14 @@ body {
     color: #AAFFFF;
 }
 
+.touch7 {
+    color: #E2B391
+}
+
+.touch8 {
+    color: #CCCCCC
+}
+
 .flagged {
     background: url('../Images/Flag-Cell.png'); 
     background-size: 100%;
@@ -91,6 +111,26 @@ body {
 #flag-count {
     font-family: 'Courier Prime', monospace;
     font-size: 25px;
-    color: #FF5050;
+    color: #B0B0B0;
     margin: 0 0 0 10px;  
+}
+
+#flag-section {
+    display: flex;
+    flex-direction: row;
+    margin-left: 5px;
+}
+
+.mine {
+    background: url('../Images/Mine-01.png');
+    background-size: 100%;
+    border-left: 3px solid #905050;
+    border-top: 3px solid #905050;
+    border-right: 3px solid #602020;
+    border-bottom: 3px solid #602020;
+}
+
+img {
+    height: 100%;
+    width: 100%;
 }

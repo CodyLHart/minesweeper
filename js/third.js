@@ -12,7 +12,7 @@
 //---------- STATE ----------//
 let boardWidth = 10;
 let boardHeight = 10;
-let numMines = 10;
+let numMines = 5;
 // let boardWidth = prompt('Width');
 // let boardHeight = prompt('Height');
 // let numMines = prompt('Mines');
@@ -263,18 +263,3 @@ function stopTimer() {
     clearInterval(timerVar);
 }
 
-
-// if (numFlags === 0) {
-//     let flagCheck = []
-//     let flaggedArray = document.querySelectorAll('.flagged');
-//     for (let i = 0; i < flaggedArray.length; i++) {
-//         flagCheck.push(flaggedArray[i].getAttribute('id'));
-//     };
-//     console.log(flagCheck);
-// };
-
-// If 0 flags are remaining
-// Find indexes of flagged cells and put them into flagged array
-// Iterate through flagged array
-    // If  all flagged indexes are equal to mine indexes
-    // Winner

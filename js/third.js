@@ -1,7 +1,7 @@
 //---------- STATE ----------//
-let boardWidth = 10;
-let boardHeight = 10;
-let numMines = 10;
+let boardWidth = 16;
+let boardHeight = 16;
+let numMines = 40;
 // let boardWidth = parseInt(prompt('Width'));
 // let boardHeight = parseInt(prompt('Height'));
 // let numMines = parseInt(prompt('Mines'));
@@ -28,7 +28,7 @@ let flagCountEl = document.querySelector('#flag-count');
 let timerEl = document.querySelector('#timer');
 let containerEl = document.querySelector('#container');
 let boardHeaderEl = document.querySelector('#board-header');
-let buttonEl = document.querySelector('button');
+let buttonEl = document.querySelector('#restart');
 
 //---------- EVENT LISTENERS ----------//
 boardEl.addEventListener('click', handleClick);

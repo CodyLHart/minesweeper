@@ -28,6 +28,7 @@ let timerEl = document.querySelector('#timer');
 let containerEl = document.querySelector('#container');
 let boardHeaderEl = document.querySelector('#board-header');
 let buttonEl = document.querySelector('#restart');
+let difficulty = document.querySelector('#change-difficulty');
 
 let customEl = document.querySelector('#custom');
 let beginnerEl = document.querySelector('#beginner');
@@ -43,15 +44,34 @@ let minesInput = document.querySelector('#mines');
 //---------- EVENT LISTENERS ----------//
 boardEl.addEventListener('click', handleClick);
 buttonEl.addEventListener('click', restart);
-customEl.addEventListener('click', revealCustom);
+customEl.addEventListener('click', custom);
 beginnerEl.addEventListener('click', beginner);
 intermediateEl.addEventListener('click', intermediate);
 advancedEl.addEventListener('click', advanced);
 submitButtonEl.addEventListener('click', setBoardSize);
+difficulty.addEventListener('click', changeDifficulty)
 //---------- FUNCTIONS ----------//
 
 // init();
 document.querySelector('main').style.visibility = 'hidden';
+
+function custom() {
+    revealCustom();
+    widthInput.value = '';
+    heightInput.value = '';
+    minesInput.value = '';
+}
+
+function changeDifficulty() {
+    document.querySelector('main').style.visibility = 'hidden';
+    document.querySelector('#section-container').style.display = 'block';
+    stopTimer();
+    boardEl.innerHTML = '';
+    messageEl.textContent = 'MINESWEEPER';
+    board = [];
+    timerCount = 0;
+    timerEl.textContent = 0;
+}
 
 function beginner() {
     hideCustom();
@@ -81,20 +101,24 @@ function setBoardSize() {
         boardWidth = parseInt(widthInput.value);
         boardHeight = parseInt(heightInput.value);
         numMines = parseInt(minesInput.value);
+        
+        surround = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
+        surroundLSide = [(0 - boardWidth), (1 - boardWidth), 1, (boardWidth), (boardWidth + 1)];
+        surroundRSide = [(-1 - boardWidth), (0 - boardWidth), -1, (boardWidth - 1), (boardWidth)];
+        surroundTSide = [-1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
+        surroundBSide = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1];
+        surroundTL = [1, (boardWidth), (boardWidth + 1)];
+        surroundTR = [-1, (boardWidth - 1), (boardWidth)];
+        surroundBL = [(0 - boardWidth), (1 - boardWidth), 1];
+        surroundBR = [(-1 - boardWidth), (0 - boardWidth), -1];
+        init();
     } else {
         alert('CHOOSE A NUMBER GREATER THAN 0');
+        widthInput.value = '';
+        heightInput.value = '';
+        minesInput.value = '';
+        
     };
-    console.log(`${boardWidth} ${boardHeight} ${numMines}`);
-    surround = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
-    surroundLSide = [(0 - boardWidth), (1 - boardWidth), 1, (boardWidth), (boardWidth + 1)];
-    surroundRSide = [(-1 - boardWidth), (0 - boardWidth), -1, (boardWidth - 1), (boardWidth)];
-    surroundTSide = [-1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
-    surroundBSide = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1];
-    surroundTL = [1, (boardWidth), (boardWidth + 1)];
-    surroundTR = [-1, (boardWidth - 1), (boardWidth)];
-    surroundBL = [(0 - boardWidth), (1 - boardWidth), 1];
-    surroundBR = [(-1 - boardWidth), (0 - boardWidth), -1];
-    init();
 }
 
 function revealCustom() {
@@ -108,6 +132,7 @@ function hideCustom() {
 function restart() {
     stopTimer();
     boardEl.innerHTML = '';
+    messageEl.textContent = 'MINESWEEPER';
     board = [];
     timerCount = 0;
     timerEl.textContent = 0;

@@ -76,6 +76,13 @@ h3 {
     text-align: center;
 }
 
+.cell:active {
+    border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
+    border-left: 3px solid #202020;
+    border-top: 3px solid #202020; 
+}
+
 .clicked {
     border: 1px solid #202020;
     font-size: 18px;
@@ -163,6 +170,13 @@ button {
     font-size: 15px;
     font-family: 'Quicksand', sans-serif;
     outline: none;
+}
+
+button:active {
+        border-right: 3px solid #505050;
+        border-bottom: 3px solid #505050;
+        border-left: 3px solid #202020;
+        border-top: 3px solid #202020; 
 }
 
 form {

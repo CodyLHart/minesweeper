@@ -7,6 +7,7 @@ let board = [];
 let numAdjacent;
 let timerCount = 0;
 let timerVar;
+let flagMode = false;
 
 let surround;
 let surroundLSide;
@@ -34,6 +35,7 @@ let intermediateEl = document.querySelector('#intermediate');
 let advancedEl = document.querySelector('#advanced');
 let customSelectEl = document.querySelector('#custom-board');
 let submitButtonEl = document.querySelector('#submit');
+let flagModeButton = document.querySelector('#flag-mode');
 
 let widthInput = document.querySelector('#width');
 let heightInput = document.querySelector('#height');
@@ -48,9 +50,20 @@ intermediateEl.addEventListener('click', intermediate);
 advancedEl.addEventListener('click', advanced);
 submitButtonEl.addEventListener('click', setBoardSize);
 difficulty.addEventListener('click', changeDifficulty)
+flagModeButton.addEventListener('click', toggleFlagMode);
 
 //---------- FUNCTIONS ----------//
 document.querySelector('main').style.visibility = 'hidden';
+
+function toggleFlagMode() {
+    if (flagMode) {
+        flagMode = false;
+        flagModeButton.classList.remove('selected');
+    } else {
+        flagMode = true;
+        flagModeButton.classList.add('selected');
+    }
+}
 
 function custom() {
     revealCustom();
@@ -143,6 +156,8 @@ function restart() {
     createBoard();
     placeMines();
     placeNumbers();
+    numFlags = numMines;
+    flagCountEl.textContent = `${numFlags}`;
     boardEl.addEventListener('click', handleClick);
 }
 
@@ -154,7 +169,6 @@ function init() {
     placeNumbers();
     numFlags = numMines;
     flagCountEl.textContent = `${numFlags}`;
-    console.log(board);
     messageEl.textContent = 'MINESWEEPER';
 }
 
@@ -235,7 +249,7 @@ function checkSurroundingRSide(index) {
 
 
 function handleClick(e) {
-    if (e.altKey) {
+    if (e.altKey || flagMode) {
         let clicked = e.target;
         if (clicked.classList.contains('clicked')) return;
         if (!clicked.classList.contains('flagged')) {

@@ -251,3 +251,13 @@ section {
 #custom-board {
     display: none;
 }
+
+#flag-mode {
+}
+
+.selected {
+    border-top: 3px solid #202020;
+    border-left: 3px solid #202020;
+    border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
+}

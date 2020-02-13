@@ -1,25 +1,24 @@
 //---------- STATE ----------//
-let boardWidth = 16;
-let boardHeight = 16;
-let numMines = 40;
+let boardWidth = 10;
+let boardHeight = 10;
+let numMines = 10;
 // let boardWidth = parseInt(prompt('Width'));
 // let boardHeight = parseInt(prompt('Height'));
 // let numMines = parseInt(prompt('Mines'));
-let boardArea = boardWidth * boardHeight;
 let board = [];
 let numAdjacent;
 let timerCount = 0;
 let timerVar;
+let surround;
+let surroundLSide;
+let surroundRSide;
+let surroundTSide;
+let surroundBSide;
+let surroundTL;
+let surroundTR;
+let surroundBL;
+let surroundBR;
 
-let surround = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
-let surroundLSide = [(0 - boardWidth), (1 - boardWidth), 1, (boardWidth), (boardWidth + 1)];
-let surroundRSide = [(-1 - boardWidth), (0 - boardWidth), -1, (boardWidth - 1), (boardWidth)];
-let surroundTSide = [-1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
-let surroundBSide = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1];
-let surroundTL = [1, (boardWidth), (boardWidth + 1)];
-let surroundTR = [-1, (boardWidth - 1), (boardWidth)];
-let surroundBL = [(0 - boardWidth), (1 - boardWidth), 1];
-let surroundBR = [(-1 - boardWidth), (0 - boardWidth), -1];
 
 //---------- DOM ELEMENTS ----------//
 let boardEl = document.querySelector('#board');
@@ -30,11 +29,81 @@ let containerEl = document.querySelector('#container');
 let boardHeaderEl = document.querySelector('#board-header');
 let buttonEl = document.querySelector('#restart');
 
+let customEl = document.querySelector('#custom');
+let beginnerEl = document.querySelector('#beginner');
+let intermediateEl = document.querySelector('#intermediate');
+let advancedEl = document.querySelector('#advanced');
+let customSelectEl = document.querySelector('#custom-board');
+let submitButtonEl = document.querySelector('#submit');
+
+let widthInput = document.querySelector('#width');
+let heightInput = document.querySelector('#height');
+let minesInput = document.querySelector('#mines');
+
 //---------- EVENT LISTENERS ----------//
 boardEl.addEventListener('click', handleClick);
 buttonEl.addEventListener('click', restart);
+customEl.addEventListener('click', revealCustom);
+beginnerEl.addEventListener('click', beginner);
+intermediateEl.addEventListener('click', intermediate);
+advancedEl.addEventListener('click', advanced);
+submitButtonEl.addEventListener('click', setBoardSize);
 //---------- FUNCTIONS ----------//
-init();
+
+// init();
+document.querySelector('main').style.visibility = 'hidden';
+
+function beginner() {
+    hideCustom();
+    widthInput.value = 10;
+    heightInput.value = 10;
+    minesInput.value = 10;
+}
+
+function intermediate() {
+    hideCustom();
+    widthInput.value = 16;
+    heightInput.value = 16;
+    minesInput.value = 40;
+}
+
+function advanced() {
+    hideCustom();
+    widthInput.value = 30;
+    heightInput.value = 16;
+    minesInput.value = 99;
+}
+
+
+
+function setBoardSize() {
+    if (parseInt(widthInput.value) > 0 && parseInt(heightInput.value) > 0 && parseInt(minesInput.value) > 0) {
+        boardWidth = parseInt(widthInput.value);
+        boardHeight = parseInt(heightInput.value);
+        numMines = parseInt(minesInput.value);
+    } else {
+        alert('CHOOSE A NUMBER GREATER THAN 0');
+    };
+    console.log(`${boardWidth} ${boardHeight} ${numMines}`);
+    surround = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
+    surroundLSide = [(0 - boardWidth), (1 - boardWidth), 1, (boardWidth), (boardWidth + 1)];
+    surroundRSide = [(-1 - boardWidth), (0 - boardWidth), -1, (boardWidth - 1), (boardWidth)];
+    surroundTSide = [-1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
+    surroundBSide = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1];
+    surroundTL = [1, (boardWidth), (boardWidth + 1)];
+    surroundTR = [-1, (boardWidth - 1), (boardWidth)];
+    surroundBL = [(0 - boardWidth), (1 - boardWidth), 1];
+    surroundBR = [(-1 - boardWidth), (0 - boardWidth), -1];
+    init();
+}
+
+function revealCustom() {
+    customSelectEl.style.display = 'block';
+}
+
+function hideCustom() {
+    customSelectEl.style.display = 'none';
+}
 
 function restart() {
     stopTimer();
@@ -42,11 +111,15 @@ function restart() {
     board = [];
     timerCount = 0;
     timerEl.textContent = 0;
-    init();
+    createBoard();
+    placeMines();
+    placeNumbers();
     boardEl.addEventListener('click', handleClick);
 }
 
 function init() {
+    document.querySelector('main').style.visibility = 'visible';
+    document.querySelector('#section-container').style.display = 'none';
     createBoard();
     placeMines();
     placeNumbers();
@@ -59,10 +132,10 @@ function init() {
 function createBoard() {
     boardEl.style.height = `${25 * boardHeight}px`;
     boardEl.style.width = `${25 * boardWidth}px`;
-    for (let i = 0; i < boardArea; i++) {
+    for (let i = 0; i < boardWidth * boardHeight; i++) {
         board.push(0);
     };
-    for (let i = 0; i < boardArea; i++) {
+    for (let i = 0; i < boardWidth * boardHeight; i++) {
         let newCell = document.createElement('div');
         newCell.setAttribute('class', 'cell');
         newCell.setAttribute('id', `${i}`);
@@ -77,7 +150,7 @@ function placeMines() {
     let randoms = [];
     let random;
     while (randoms.length < numMines) {
-        random = (Math.floor(Math.random() * boardArea))
+        random = (Math.floor(Math.random() * boardWidth * boardHeight))
         if (randoms.includes(random) === false) {
             randoms.push(random)
         };
@@ -150,6 +223,7 @@ function handleClick(e) {
                         return;
                     } else {
                         winner();
+                        console.log(flagCheck);
                     };
                 };
             };
@@ -170,7 +244,7 @@ function handleClick(e) {
             revealCell(cellIndex);
         };
     };
-    if (document.querySelectorAll('.clicked').length === boardArea - numMines) {
+    if (document.querySelectorAll('.clicked').length === (boardHeight * boardWidth) - numMines) {
         winner();
     };
     flagCountEl.textContent = `${numFlags}`;
@@ -199,7 +273,7 @@ function revealMines() {
 }
 
 function revealCell(cellIdx) {
-    if (document.getElementById(`${cellIdx}`).classList.contains('clicked')) return;
+    if (document.getElementById(`${cellIdx}`).classList.contains('clicked') || document.getElementById(`${cellIdx}`).classList.contains('flagged')) return;
     if (board[cellIdx] === 0) {
         document.getElementById(`${cellIdx}`).classList.add('clicked');
         flood(cellIdx);
@@ -218,11 +292,11 @@ function flood(cellIdx) {
         for (let i = 0; i < surroundTR.length; i++) {
             revealCell(cellIdx + surroundTR[i]);
         };
-    } else if (cellIdx === boardArea - boardWidth) {
+    } else if (cellIdx === (boardHeight * boardWidth) - boardWidth) {
         for (let i = 0; i < surroundBL.length; i++) {
             revealCell(cellIdx + surroundBL[i]);
         };
-    } else if (cellIdx === boardArea - 1) {
+    } else if (cellIdx === (boardHeight * boardWidth) - 1) {
         for (let i = 0; i < surroundBR.length; i++) {
             revealCell(cellIdx + surroundBR[i]);
         };
@@ -230,7 +304,7 @@ function flood(cellIdx) {
         for (let i = 0; i < surroundTSide.length; i++) {
             revealCell(cellIdx + surroundTSide[i]);
         };
-    } else if (cellIdx >= boardArea - boardWidth && cellIdx < boardArea) {
+    } else if (cellIdx >= (boardHeight * boardWidth) - boardWidth && cellIdx < (boardHeight * boardWidth)) {
         for (let i = 0; i < surroundBSide.length; i++) {
             revealCell(cellIdx + surroundBSide[i]);
         };

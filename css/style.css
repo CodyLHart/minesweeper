@@ -6,8 +6,25 @@ body {
     background-color: #353540;
 }
 
-h1 {
+h1, h2 {
     color: #E0D0D0;
+
+}
+
+h2 {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+h3 {
+    font-size: 35px;
+    color: #E0D0D0;
+    margin: 5px 0 10px 0;
+    background-color: #353535;
+    /* border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
+    border-top: 3px solid #202020;
+    border-left: 3px solid #202020; */
 }
 
 #container {
@@ -145,6 +162,7 @@ button {
     color: #E0D0D0;
     font-size: 15px;
     font-family: 'Quicksand', sans-serif;
+    outline: none;
 }
 
 form {
@@ -160,5 +178,60 @@ input {
 
 #submit {
     width: 100px;
-    margin-top: 5px;
+    margin-top: 10px;
+}
+
+main {
+    text-align: center;
+    /* visibility: hidden; */
+}
+
+section {
+    display: block;
+    background-color: #353535;
+    padding: 15px;
+    border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
+    border-top: 3px solid #202020;
+    border-left: 3px solid #202020;
+    text-align: center;
+}
+
+#section-container {
+    background-color: #353535;
+    padding: 10px;
+    border-left: 3px solid #505050;
+    border-top: 3px solid #505050;
+    border-right: 3px solid #202020;
+    border-bottom: 3px solid #202020;
+}
+
+.radio {
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.select > input {
+    width: 10px;
+}
+
+.select {
+    margin: 15px;
+}
+
+#beginner > label {
+    color: #AAAAFF
+}
+
+#intermediate > label {
+    color: #AAFFAA;
+}
+
+#advanced > label {
+    color: #FFAAAA;
+}
+
+#custom-board {
+    display: none;
 }

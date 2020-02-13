@@ -2,13 +2,12 @@
 let boardWidth = 10;
 let boardHeight = 10;
 let numMines = 10;
-// let boardWidth = parseInt(prompt('Width'));
-// let boardHeight = parseInt(prompt('Height'));
-// let numMines = parseInt(prompt('Mines'));
+
 let board = [];
 let numAdjacent;
 let timerCount = 0;
 let timerVar;
+
 let surround;
 let surroundLSide;
 let surroundRSide;
@@ -18,7 +17,6 @@ let surroundTL;
 let surroundTR;
 let surroundBL;
 let surroundBR;
-
 
 //---------- DOM ELEMENTS ----------//
 let boardEl = document.querySelector('#board');
@@ -50,9 +48,8 @@ intermediateEl.addEventListener('click', intermediate);
 advancedEl.addEventListener('click', advanced);
 submitButtonEl.addEventListener('click', setBoardSize);
 difficulty.addEventListener('click', changeDifficulty)
-//---------- FUNCTIONS ----------//
 
-// init();
+//---------- FUNCTIONS ----------//
 document.querySelector('main').style.visibility = 'hidden';
 
 function custom() {
@@ -71,6 +68,12 @@ function changeDifficulty() {
     board = [];
     timerCount = 0;
     timerEl.textContent = 0;
+    boardEl.addEventListener('click', handleClick);
+    customEl.checked = false;
+    widthInput.value = '';
+    heightInput.value = '';
+    minesInput.value = '';
+    hideCustom();
 }
 
 function beginner() {
@@ -94,8 +97,6 @@ function advanced() {
     minesInput.value = 99;
 }
 
-
-
 function setBoardSize() {
     if (parseInt(widthInput.value) > 0 && parseInt(heightInput.value) > 0 && parseInt(minesInput.value) > 0) {
         boardWidth = parseInt(widthInput.value);
@@ -112,6 +113,9 @@ function setBoardSize() {
         surroundBL = [(0 - boardWidth), (1 - boardWidth), 1];
         surroundBR = [(-1 - boardWidth), (0 - boardWidth), -1];
         init();
+    } else if (widthInput.value === '' && heightInput.value === '' && minesInput.value === '') {
+        alert('SELECT A DIFFICULTY LEVEL');
+        return;
     } else {
         alert('CHOOSE A NUMBER GREATER THAN 0');
         widthInput.value = '';

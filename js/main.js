@@ -1,216 +1,382 @@
-//---------- CONSTANTS ----------//
-const surroundingCells = [-11, -10, -9, -1, 1, 9, 10, 11];
-const surroundingLeftSide = [-10, -9, 1, 10, 11];
-const surroundingRightSide = [-11, -10, -1, 9, 10]
-
-
-//Define required variables used to track the state of the game
-    // Difficulty Level
-        // numOfMines - number
-        // board (locations of mines) - array
-            // - array of arrays of numbers to represent each cell's value
-    // gameOver - boolean
-    // isWinner - boolean
-    // numOfFlags - number
-    // timer
-    // message - string
-    // fastTimes - array of numbers
-
 //---------- STATE ----------//
+let boardWidth = 10;
+let boardHeight = 10;
+let numMines = 10;
+
 let board = [];
-let gameOver = false;
-let isWinner = false;
-let numOfMines;
-let numOfFlags;
-let message;
+let numAdjacent;
+let timerCount = 0;
+let timerVar;
+let flagMode = false;
 
-// Cached DOM elements
-    // All of the cells on the board 
-    // Replay button
-    // Message
+let surround;
+let surroundLSide;
+let surroundRSide;
+let surroundTSide;
+let surroundBSide;
+let surroundTL;
+let surroundTR;
+let surroundBL;
+let surroundBR;
+
+//---------- DOM ELEMENTS ----------//
+let messageEl = document.querySelector('h1');
+let containerEl = document.querySelector('#container');
+let flagCountEl = document.querySelector('#flag-count');
+let timerEl = document.querySelector('#timer');
+let boardHeaderEl = document.querySelector('#board-header');
 let boardEl = document.querySelector('#board');
+let flagModeButton = document.querySelector('#flag-mode');
+let restartButtonEl = document.querySelector('#restart');
+let difficulty = document.querySelector('#change-difficulty');
 
-for (let i = 0; i < 100; i++) {
-    let newCell = document.createElement('div');
-    newCell.setAttribute('class', 'cell');
-    newCell.setAttribute('data-id', `${i}`);
-    boardEl.appendChild(newCell);
-}
+let beginnerEl = document.querySelector('#beginner');
+let intermediateEl = document.querySelector('#intermediate');
+let advancedEl = document.querySelector('#advanced');
+let customEl = document.querySelector('#custom');
+let customSelectEl = document.querySelector('#custom-board');
+let widthInput = document.querySelector('#width');
+let heightInput = document.querySelector('#height');
+let minesInput = document.querySelector('#mines');
+let submitButtonEl = document.querySelector('#submit');
 
 
 //---------- EVENT LISTENERS ----------//
-document.querySelector('#board').addEventListener('click', handleClick);
-
-// Upon loading the app should:
-    // Receive player input for difficulty level
-    // Create the board accordinly
-        // Initialize the board as an array of arrays of nums
-            // Maybe a 1 dimensional array... I haven't decided yet
-            // These nums represent the value at each cell
-            // Initialize these to null
-        // Randomize the mine locations (mines have a value or -1)
-        // gameOver = false;
-        // isWinner = false;
-        // message  = 'Good Luck!' or something
-    // Render those values to the page
-    // Wait for the user to click a cell
-
-// Handle if player clicks a cell
-    // If this is the first cell they have clicked
-        // Start the timer
-    // If cell contains a mine
-        // gameOver
-    // Otherwise - If cell is touching at least one mine
-        // Reveal the number of mines that cell is touching
-    // Otherwise - If cell is touching no mines
-        // Reveal all connected cells that are touching no mines
-        // Reveal a border of numbers surrounding the blank cells
-        // This part sounds hard. We shall see.
-    // Make sure all revealed cells are unclickable
-
-// Handle if player right clicks 
-    // If cell is unflagged
-        // Give cell a flag
-        // Make that cell un-left-clickable
-            // If cell has class of flagged, remove event listener? Probably...
-        // Decrease remaining flags available by 1
-    // If cell is flagged
-        // Remove flag from cell
-        // Make that cell left-clickable again 
-        // Increase remaining flags available by 1
-
-// If gameOver 
-    // Stop timer
-    // Reveal replay button
-    // If winner
-        // Winner message
-        // If time is in top scores, save it to the top scores
-    // If loser
-        // Reveal remaning mines
-        // Loser message
-        
-    // I think I want the overall opacity of the board to fade down to maybe 
-    // 30-50% while the gameOver div shows up full opacity over top of it.
-    // Along with the gameOver message, will be the replay button
-    // When user presses the replay button, the div will ask the user 
-    // for game difficulty. Upon selection, the board will render and 
-    // fade back in to full opacity.
-
+boardEl.addEventListener('click', handleClick);
+restartButtonEl.addEventListener('click', restart);
+customEl.addEventListener('click', custom);
+beginnerEl.addEventListener('click', beginner);
+intermediateEl.addEventListener('click', intermediate);
+advancedEl.addEventListener('click', advanced);
+submitButtonEl.addEventListener('click', setBoardSize);
+difficulty.addEventListener('click', changeDifficulty)
+flagModeButton.addEventListener('click', toggleFlagMode);
 
 //---------- FUNCTIONS ----------//
-init();
+document.querySelector('main').style.visibility = 'hidden';
+
+function toggleFlagMode() {
+    if (flagMode) {
+        flagMode = false;
+        flagModeButton.classList.remove('selected');
+    } else {
+        flagMode = true;
+        flagModeButton.classList.add('selected');
+    }
+}
+
+function custom() {
+    revealCustom();
+    widthInput.value = '';
+    heightInput.value = '';
+    minesInput.value = '';
+}
+
+function changeDifficulty() {
+    document.querySelector('main').style.visibility = 'hidden';
+    document.querySelector('#section-container').style.display = 'block';
+    stopTimer();
+    boardEl.innerHTML = '';
+    messageEl.textContent = 'MINESWEEPER';
+    board = [];
+    timerCount = 0;
+    timerEl.textContent = 0;
+    boardEl.addEventListener('click', handleClick);
+    customEl.checked = false;
+    widthInput.value = '';
+    heightInput.value = '';
+    minesInput.value = '';
+    hideCustom();
+}
+
+function beginner() {
+    hideCustom();
+    widthInput.value = 10;
+    heightInput.value = 10;
+    minesInput.value = 10;
+}
+
+function intermediate() {
+    hideCustom();
+    widthInput.value = 16;
+    heightInput.value = 16;
+    minesInput.value = 40;
+}
+
+function advanced() {
+    hideCustom();
+    widthInput.value = 30;
+    heightInput.value = 16;
+    minesInput.value = 99;
+}
+
+function setBoardSize() {
+    if (parseInt(widthInput.value) > 0 && parseInt(heightInput.value) > 0 && parseInt(minesInput.value) > 0) {
+        boardWidth = parseInt(widthInput.value);
+        boardHeight = parseInt(heightInput.value);
+        numMines = parseInt(minesInput.value);
+        
+        surround = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
+        surroundLSide = [(0 - boardWidth), (1 - boardWidth), 1, (boardWidth), (boardWidth + 1)];
+        surroundRSide = [(-1 - boardWidth), (0 - boardWidth), -1, (boardWidth - 1), (boardWidth)];
+        surroundTSide = [-1, 1, (boardWidth - 1), (boardWidth), (boardWidth + 1)];
+        surroundBSide = [(-1 - boardWidth), (0 - boardWidth), (1 - boardWidth), -1, 1];
+        surroundTL = [1, (boardWidth), (boardWidth + 1)];
+        surroundTR = [-1, (boardWidth - 1), (boardWidth)];
+        surroundBL = [(0 - boardWidth), (1 - boardWidth), 1];
+        surroundBR = [(-1 - boardWidth), (0 - boardWidth), -1];
+        init();
+    } else if (widthInput.value === '' && heightInput.value === '' && minesInput.value === '') {
+        alert('SELECT A DIFFICULTY LEVEL');
+        return;
+    } else {
+        alert('CHOOSE A NUMBER GREATER THAN 0');
+        widthInput.value = '';
+        heightInput.value = '';
+        minesInput.value = '';
+        
+    };
+}
+
+function revealCustom() {
+    customSelectEl.style.display = 'block';
+}
+
+function hideCustom() {
+    customSelectEl.style.display = 'none';
+}
+
+function restart() {
+    stopTimer();
+    boardEl.innerHTML = '';
+    messageEl.textContent = 'MINESWEEPER';
+    board = [];
+    timerCount = 0;
+    timerEl.textContent = 0;
+    createBoard();
+    placeMines();
+    placeNumbers();
+    numFlags = numMines;
+    flagCountEl.textContent = `${numFlags}`;
+    boardEl.addEventListener('click', handleClick);
+}
 
 function init() {
-    for (let i = 0; i < 100; i++) {
+    document.querySelector('main').style.visibility = 'visible';
+    document.querySelector('#section-container').style.display = 'none';
+    createBoard();
+    placeMines();
+    placeNumbers();
+    numFlags = numMines;
+    flagCountEl.textContent = `${numFlags}`;
+    messageEl.textContent = 'MINESWEEPER';
+}
+
+function createBoard() {
+    boardEl.style.height = `${25 * boardHeight}px`;
+    boardEl.style.width = `${25 * boardWidth}px`;
+    for (let i = 0; i < boardWidth * boardHeight; i++) {
         board.push(0);
     };
-    numOfMines = 10;
-    numOfFlags = numOfMines;
-    placeMines();
-    console.log(board);
+    for (let i = 0; i < boardWidth * boardHeight; i++) {
+        let newCell = document.createElement('div');
+        newCell.setAttribute('class', 'cell');
+        newCell.setAttribute('id', `${i}`);
+        boardEl.appendChild(newCell);
+    };
+    containerEl.style.height = `${(25 * boardHeight) + 55}px`;
+    containerEl.style.width = `${(25 * boardWidth)}px`;
+    boardHeaderEl.style.width = `${25 * boardWidth}px`;
 }
 
 function placeMines() {
     let randoms = [];
     let random;
-    while (randoms.length < numOfMines) {
-        random = (Math.floor(Math.random() * 100))
+    while (randoms.length < numMines) {
+        random = (Math.floor(Math.random() * boardWidth * boardHeight))
         if (randoms.includes(random) === false) {
             randoms.push(random)
         };
     };
     for (let i = 0; i < randoms.length; i++) {
-        board[randoms[i]] = -1;
+        board[randoms[i]] = 'M';
     };
 }
 
-function handleClick(e) {
-    let clicked = e.target;
-    let cellIndex = parseInt(clicked.getAttribute('data-id'));
-    if (board[cellIndex] === -1) {
-        handleMine(clicked);
-    } else {
-        let adjacentIndex = [];
-        if (cellIndex % 10 === 9) {
-            for (let i = 0; i < surroundingRightSide.length; i++) {
-                if (cellIndex + surroundingRightSide[i] >= 0 && cellIndex + surroundingRightSide[i] < 100) {
-                    adjacentIndex.push(cellIndex + surroundingRightSide[i]);
-                };
-            };
-        } else if (cellIndex % 10 === 0) {
-            for (let i = 0; i < surroundingLeftSide.length; i++) {
-                if (cellIndex + surroundingLeftSide[i] >= 0 && cellIndex + surroundingLeftSide[i] < 100) {
-                    adjacentIndex.push(cellIndex + surroundingLeftSide[i]);
-                };
-            };
-        } else {
-            for (let i = 0; i < surroundingCells.length; i++) {
-                if (cellIndex + surroundingCells[i] >= 0 && cellIndex + surroundingCells[i] < 100) {
-                    adjacentIndex.push(cellIndex + surroundingCells[i]);
-                };
+function placeNumbers() {
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] !== 'M') {
+            if (i % boardWidth === 0) {
+                checkSurroundingLSide(i);
+            } else if (i % boardWidth === (boardWidth - 1)) {
+                checkSurroundingRSide(i);
+            } else {
+                checkSurrounding(i);
             };
         };
-        // console.log(adjacentIndex);
-        function reveal() {
-            let numAdjacent = 0;
-            for (let i = 0; i < adjacentIndex.length; i++) {
-                numAdjacent += Math.abs(board[adjacentIndex[i]]);
-            };
-            // console.log(numAdjacent);
-            if (numAdjacent === 0) {
-                clicked.classList.add('clicked');
-                // Iterate through the surrounding cells and reveal
-                // console.log(adjacentIndex);
-                // for (let i = 0; i < adjacentIndex; i++) {
-                    
-                // };
-            };
-            if (numAdjacent > 0) {
-                clicked.classList.add('clicked', `touch${numAdjacent}`);
-                clicked.textContent = `${numAdjacent}`;
-            };
-        };
-        reveal();
     };
+}
+
+function checkSurrounding(index) {
+    numAdjacent = 0
+    for (let j = 0; j < surround.length; j++) {
+        if (board[index + surround[j]] === 'M') {
+            numAdjacent++;
+        };
+    };
+    board[index] = numAdjacent;
+}
+
+function checkSurroundingLSide(index) {
+    numAdjacent = 0
+    for (let j = 0; j < surroundLSide.length; j++) {
+        if (board[index + surroundLSide[j]] === 'M') {
+            numAdjacent++;
+        };
+    };
+    board[index] = numAdjacent;
+}
+
+function checkSurroundingRSide(index) {
+    numAdjacent = 0
+    for (let j = 0; j < surroundRSide.length; j++) {
+        if (board[index + surroundRSide[j]] === 'M') {
+            numAdjacent++;
+        };
+    };
+    board[index] = numAdjacent;
+}
+
+
+function handleClick(e) {
+    if (e.altKey || e.metaKey || flagMode) {
+        let clicked = e.target;
+        if (clicked.classList.contains('clicked')) return;
+        if (!clicked.classList.contains('flagged')) {
+            clicked.classList.add('flagged');
+            numFlags--;
+            if (numFlags === 0) {
+                let flagCheck = []
+                let flaggedArray = document.querySelectorAll('.flagged');
+                for (let i = 0; i < flaggedArray.length; i++) {
+                    flagCheck.push(parseInt(flaggedArray[i].getAttribute('id')));
+                };
+                for (let i = 0; i < flagCheck.length; i++) {
+                    if (board[flagCheck[i]] !== 'M') {
+                        return;
+                    } else {
+                        winner();
+                        console.log(flagCheck);
+                    };
+                };
+            };
+        } else if (clicked.classList.contains('flagged')) {
+            clicked.classList.remove('flagged');
+            numFlags++;
+        };
+    } else {
+        let clicked = e.target;
+        if (clicked.classList.contains('flagged')) return;
+        let cellIndex = parseInt(clicked.getAttribute('id'));
+        if (board[cellIndex] === 'M') {
+            handleMine(clicked);
+        } else {
+            if (document.querySelectorAll('.clicked').length === 0) {
+                timerVar = setInterval(startTimer, 1000);
+            };
+            revealCell(cellIndex);
+        };
+    };
+    if (document.querySelectorAll('.clicked').length === (boardHeight * boardWidth) - numMines) {
+        winner();
+    };
+    flagCountEl.textContent = `${numFlags}`;
 }
 
 function handleMine(clicked) {
     console.log('Boom bitch');
-    clicked.style.background = 'red';
+    clicked.classList.add('mine');
+    revealMines();
+    messageEl.textContent = 'LOSER!';
+    stopTimer();
+    boardEl.removeEventListener('click', handleClick);
 }
 
-// function checkAdjacent() {
-//     let numAdjacent = 0;
-//     for (let i = 0; i < surroundingCells.length; i++) {
-//         numAdjacent += Math.abs((board[cellIndex + i]));
-//     };
-//     console.log(numAdjacent);
-// }
+function revealMines() {
+    let mineIdx = [];
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] === 'M') {
+            mineIdx.push(i);
+        };
+    };
+    for (let i = 0; i < mineIdx.length; i++) {
+        document.getElementById(mineIdx[i].toString()).classList.add('mine');
+        
+    };
+}
 
+function revealCell(cellIdx) {
+    if (document.getElementById(`${cellIdx}`).classList.contains('clicked') || document.getElementById(`${cellIdx}`).classList.contains('flagged')) return;
+    if (board[cellIdx] === 0) {
+        document.getElementById(`${cellIdx}`).classList.add('clicked');
+        flood(cellIdx);
+    } else if (board[cellIdx] > 0) {
+        document.getElementById(`${cellIdx}`).classList.add('clicked', `touch${board[cellIdx]}`);
+        document.getElementById(`${cellIdx}`).textContent = `${board[cellIdx]}`;
+    };
+}
 
+function flood(cellIdx) {
+    if (cellIdx === 0) {
+        for (let i = 0; i < surroundTL.length; i++) {
+            revealCell(cellIdx + surroundTL[i]);
+        };
+    } else if (cellIdx === boardWidth - 1) {
+        for (let i = 0; i < surroundTR.length; i++) {
+            revealCell(cellIdx + surroundTR[i]);
+        };
+    } else if (cellIdx === (boardHeight * boardWidth) - boardWidth) {
+        for (let i = 0; i < surroundBL.length; i++) {
+            revealCell(cellIdx + surroundBL[i]);
+        };
+    } else if (cellIdx === (boardHeight * boardWidth) - 1) {
+        for (let i = 0; i < surroundBR.length; i++) {
+            revealCell(cellIdx + surroundBR[i]);
+        };
+    } else if (cellIdx < boardWidth && cellIdx >= 0) {
+        for (let i = 0; i < surroundTSide.length; i++) {
+            revealCell(cellIdx + surroundTSide[i]);
+        };
+    } else if (cellIdx >= (boardHeight * boardWidth) - boardWidth && cellIdx < (boardHeight * boardWidth)) {
+        for (let i = 0; i < surroundBSide.length; i++) {
+            revealCell(cellIdx + surroundBSide[i]);
+        };
+    } else if (cellIdx % boardWidth === 0) {
+        for (let i = 0; i < surroundLSide.length; i++) {
+            revealCell(cellIdx + surroundLSide[i]);
+        };
+    } else if (cellIdx % boardWidth === boardWidth - 1) {
+        for (let i = 0; i < surroundRSide.length; i++) {
+            revealCell(cellIdx + surroundRSide[i]);
+        };
+    } else {
+        for (let i = 0; i < surround.length; i++) {
+            revealCell(cellIdx + surround[i]);
+        };
+    };
+}
 
+function startTimer() {
+        timerCount++;
+        timerEl.textContent = timerCount;
+}
 
+function stopTimer() {
+    clearInterval(timerVar);
+}
 
-
-// function countAdjacent (index) {
-//     let adjacentIndex = [];
-//     if (index % 10 === 9) {
-//         for (let i = 0; i < surroundingRightSide.length; i++) {
-//             if (index + surroundingRightSide[i] >= 0 && index + surroundingRightSide[i] < 100) {
-//                 adjacentIndex.push(index + surroundingRightSide[i]);
-//             };
-//         };
-//     } else if (index % 10 === 0) {
-//         for (let i = 0; i < surroundingLeftSide.length; i++) {
-//             if (index + surroundingLeftSide[i] >= 0 && index + surroundingLeftSide[i] < 100) {
-//                 adjacentIndex.push(index + surroundingLeftSide[i]);
-//             };
-//         };
-//     } else {
-//         for (let i = 0; i < surroundingCells.length; i++) {
-//             if (index + surroundingCells[i] >= 0 && index + surroundingCells[i] < 100) {
-//                 adjacentIndex.push(index + surroundingCells[i]);
-//             };
-//         };
-//     };
-// }
+function winner() {
+    messageEl.textContent = 'WINNER!';
+    stopTimer();
+    boardEl.removeEventListener('click', handleClick);
+}

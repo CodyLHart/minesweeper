@@ -1,6 +1,6 @@
 # MINESWEEPER
 
-This is my version of the classic game, Minesweeper. Minesweeper is a classic video game with a board of randomly placed mines. The objective of the player is to successfully identify the location of each of the mines on the board without revealing any of the mines themselves. The player wins when either all non-mine cells are revealed or all mine cells are marked with flags. 
+This is my version of the game, Minesweeper. Minesweeper is a classic video game with a board of randomly placed mines. The objective of the player is to successfully identify the location of each of the mines on the board without revealing any of the mines themselves. The player wins when either all non-mine cells are revealed or all mine cells are marked with flags. 
 
 ![Board Selection](Screenshots/Board-Select.png)
 ![Board Selection](Screenshots/Beginner-Win.png)

@@ -7,6 +7,48 @@ body {
     /* padding: 20px; */
 }
 
+main {
+    text-align: center;
+}
+
+section {
+    display: block;
+    background-color: #353535;
+    padding: 15px;
+    border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
+    border-top: 3px solid #202020;
+    border-left: 3px solid #202020;
+    text-align: center;
+}
+
+button {
+    margin-top: 10px;
+    background-color: #353535;
+    border-left: 3px solid #505050;
+    border-top: 3px solid #505050;
+    border-right: 3px solid #202020;
+    border-bottom: 3px solid #202020;
+    color: #E0D0D0;
+    font-size: 15px;
+    font-family: 'Quicksand', sans-serif;
+    outline: none;
+}
+
+button:active {
+    border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
+    border-left: 3px solid #202020;
+    border-top: 3px solid #202020; 
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #E0D0D0;
+}
+
 h1, h2 {
     color: #E0D0D0;
 
@@ -22,23 +64,25 @@ h3 {
     color: #E0D0D0;
     margin: 5px 0 10px 0;
     background-color: #353535;
-    /* border-right: 3px solid #505050;
-    border-bottom: 3px solid #505050;
-    border-top: 3px solid #202020;
-    border-left: 3px solid #202020; */
 }
 
-#container {
-    background: #353535;
+img {
+    height: 100%;
+    width: 100%;
+}
+
+input {
+    width: 50px;
+}
+
+#board {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    border-left: 3px solid #505050;
-    border-top: 3px solid #505050;
-    border-right: 3px solid #202020;
-    border-bottom: 3px solid #202020;
+    background: gray;
+    flex-wrap: wrap;
+    border-top: 3px solid #202020;
+    border-left: 3px solid #202020;
+    border-right: 3px solid #505050;
+    border-bottom: 3px solid #505050;
 }
 
 #board-header {
@@ -55,15 +99,6 @@ h3 {
     justify-content: space-between;
 }
 
-#board {
-    display: flex;
-    background: gray;
-    flex-wrap: wrap;
-    border-top: 3px solid #202020;
-    border-left: 3px solid #202020;
-    border-right: 3px solid #505050;
-    border-bottom: 3px solid #505050;
-}
 
 .cell {
     box-sizing: border-box;
@@ -89,48 +124,26 @@ h3 {
     font-size: 18px;
 }
 
-.touch1 {
-    color: #AAAAFF;
+#container {
+    background: #353535;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-left: 3px solid #505050;
+    border-top: 3px solid #505050;
+    border-right: 3px solid #202020;
+    border-bottom: 3px solid #202020;
 }
 
-.touch2 {
-    color: #AAFFAA;
-}
-
-.touch3 {
-    color: #FFAAAA;
-}
-
-.touch4 {
-    color: #FFAAFF;
-}
-
-.touch5 {
-    color: #FFFFAA;
-}
-
-.touch6 {
-    color: #AAFFFF;
-}
-
-.touch7 {
-    color: #E2B391
-}
-
-.touch8 {
-    color: #CCCCCC
+#custom-board {
+    display: none;
 }
 
 .flagged {
     background: url('../Images/Flag-Cell.png'); 
     background-size: 100%;
-}
-
-#timer {
-    font-family: 'Courier Prime', monospace;
-    font-size: 25px;
-    color: #FF5050;
-    margin: 0 10px 0 0;
 }
 
 #flag-count {
@@ -155,61 +168,10 @@ h3 {
     border-bottom: 3px solid #602020;
 }
 
-img {
-    height: 100%;
-    width: 100%;
-}
-
-button {
-    margin-top: 10px;
-    background-color: #353535;
-    border-left: 3px solid #505050;
-    border-top: 3px solid #505050;
-    border-right: 3px solid #202020;
-    border-bottom: 3px solid #202020;
-    color: #E0D0D0;
-    font-size: 15px;
-    font-family: 'Quicksand', sans-serif;
-    outline: none;
-}
-
-button:active {
-        border-right: 3px solid #505050;
-        border-bottom: 3px solid #505050;
-        border-left: 3px solid #202020;
-        border-top: 3px solid #202020; 
-}
-
-form {
-    display: flex;
-    flex-direction: column;
+.radio {
+    flex-direction: row;
     align-items: center;
-    color: #E0D0D0;
-}
 
-input {
-    width: 50px;
-}
-
-#submit {
-    width: 100px;
-    margin-top: 10px;
-}
-
-main {
-    text-align: center;
-    /* visibility: hidden; */
-}
-
-section {
-    display: block;
-    background-color: #353535;
-    padding: 15px;
-    border-right: 3px solid #505050;
-    border-bottom: 3px solid #505050;
-    border-top: 3px solid #202020;
-    border-left: 3px solid #202020;
-    text-align: center;
 }
 
 #section-container {
@@ -222,12 +184,6 @@ section {
     margin-top: 80px;
 }
 
-.radio {
-    flex-direction: row;
-    align-items: center;
-
-}
-
 .select > input {
     width: 10px;
 }
@@ -236,28 +192,53 @@ section {
     margin: 15px;
 }
 
-#beginner > label {
-    color: #AAAAFF
-}
-
-#intermediate > label {
-    color: #AAFFAA;
-}
-
-#advanced > label {
-    color: #FFAAAA;
-}
-
-#custom-board {
-    display: none;
-}
-
-#flag-mode {
-}
-
 .selected {
     border-top: 3px solid #202020;
     border-left: 3px solid #202020;
     border-right: 3px solid #505050;
     border-bottom: 3px solid #505050;
+}
+
+#submit {
+    width: 100px;
+    margin-top: 10px;
+}
+
+#timer {
+    font-family: 'Courier Prime', monospace;
+    font-size: 25px;
+    color: #FF5050;
+    margin: 0 10px 0 0;
+}
+
+.touch1, #beginner > label {
+    color: #AAAAFF;
+}
+
+.touch2, #intermediate > label {
+    color: #AAFFAA;
+}
+
+.touch3, #advanced > label {
+    color: #FFAAAA;
+}
+
+.touch4 {
+    color: #FFAAFF;
+}
+
+.touch5 {
+    color: #FFFFAA;
+}
+
+.touch6 {
+    color: #AAFFFF;
+}
+
+.touch7 {
+    color: #E2B391
+}
+
+.touch8 {
+    color: #CCCCCC
 }

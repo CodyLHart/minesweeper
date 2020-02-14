@@ -40,7 +40,6 @@ let heightInput = document.querySelector('#height');
 let minesInput = document.querySelector('#mines');
 let submitButtonEl = document.querySelector('#submit');
 
-
 //---------- EVENT LISTENERS ----------//
 boardEl.addEventListener('click', handleClick);
 restartButtonEl.addEventListener('click', restart);
@@ -54,23 +53,6 @@ flagModeButton.addEventListener('click', toggleFlagMode);
 
 //---------- FUNCTIONS ----------//
 document.querySelector('main').style.visibility = 'hidden';
-
-function toggleFlagMode() {
-    if (flagMode) {
-        flagMode = false;
-        flagModeButton.classList.remove('selected');
-    } else {
-        flagMode = true;
-        flagModeButton.classList.add('selected');
-    }
-}
-
-function custom() {
-    revealCustom();
-    widthInput.value = '';
-    heightInput.value = '';
-    minesInput.value = '';
-}
 
 function changeDifficulty() {
     document.querySelector('main').style.visibility = 'hidden';
@@ -110,6 +92,21 @@ function advanced() {
     minesInput.value = 99;
 }
 
+function custom() {
+    revealCustom();
+    widthInput.value = '';
+    heightInput.value = '';
+    minesInput.value = '';
+}
+
+function revealCustom() {
+    customSelectEl.style.display = 'block';
+}
+
+function hideCustom() {
+    customSelectEl.style.display = 'none';
+}
+
 function setBoardSize() {
     if (parseInt(widthInput.value) > 0 && parseInt(heightInput.value) > 0 && parseInt(minesInput.value) > 0) {
         boardWidth = parseInt(widthInput.value);
@@ -136,14 +133,6 @@ function setBoardSize() {
         minesInput.value = '';
         
     };
-}
-
-function revealCustom() {
-    customSelectEl.style.display = 'block';
-}
-
-function hideCustom() {
-    customSelectEl.style.display = 'none';
 }
 
 function restart() {
@@ -247,6 +236,15 @@ function checkSurroundingRSide(index) {
     board[index] = numAdjacent;
 }
 
+function toggleFlagMode() {
+    if (flagMode) {
+        flagMode = false;
+        flagModeButton.classList.remove('selected');
+    } else {
+        flagMode = true;
+        flagModeButton.classList.add('selected');
+    }
+}
 
 function handleClick(e) {
     if (e.altKey || e.metaKey || flagMode) {
@@ -298,6 +296,7 @@ function handleMine(clicked) {
     clicked.classList.add('mine');
     revealMines();
     messageEl.textContent = 'LOSER!';
+    explode.play();
     stopTimer();
     boardEl.removeEventListener('click', handleClick);
 }

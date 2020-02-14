@@ -20,30 +20,30 @@ let surroundBL;
 let surroundBR;
 
 //---------- DOM ELEMENTS ----------//
-let boardEl = document.querySelector('#board');
 let messageEl = document.querySelector('h1');
+let containerEl = document.querySelector('#container');
 let flagCountEl = document.querySelector('#flag-count');
 let timerEl = document.querySelector('#timer');
-let containerEl = document.querySelector('#container');
 let boardHeaderEl = document.querySelector('#board-header');
-let buttonEl = document.querySelector('#restart');
+let boardEl = document.querySelector('#board');
+let flagModeButton = document.querySelector('#flag-mode');
+let restartButtonEl = document.querySelector('#restart');
 let difficulty = document.querySelector('#change-difficulty');
 
-let customEl = document.querySelector('#custom');
 let beginnerEl = document.querySelector('#beginner');
 let intermediateEl = document.querySelector('#intermediate');
 let advancedEl = document.querySelector('#advanced');
+let customEl = document.querySelector('#custom');
 let customSelectEl = document.querySelector('#custom-board');
-let submitButtonEl = document.querySelector('#submit');
-let flagModeButton = document.querySelector('#flag-mode');
-
 let widthInput = document.querySelector('#width');
 let heightInput = document.querySelector('#height');
 let minesInput = document.querySelector('#mines');
+let submitButtonEl = document.querySelector('#submit');
+
 
 //---------- EVENT LISTENERS ----------//
 boardEl.addEventListener('click', handleClick);
-buttonEl.addEventListener('click', restart);
+restartButtonEl.addEventListener('click', restart);
 customEl.addEventListener('click', custom);
 beginnerEl.addEventListener('click', beginner);
 intermediateEl.addEventListener('click', intermediate);
@@ -249,7 +249,7 @@ function checkSurroundingRSide(index) {
 
 
 function handleClick(e) {
-    if (e.altKey || flagMode) {
+    if (e.altKey || e.metaKey || flagMode) {
         let clicked = e.target;
         if (clicked.classList.contains('clicked')) return;
         if (!clicked.classList.contains('flagged')) {
